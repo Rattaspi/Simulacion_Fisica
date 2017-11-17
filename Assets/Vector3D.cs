@@ -7,6 +7,7 @@ public class Vector3D {
     public Vector3D front = new Vector3D(0, 0, 1);
     public Vector3D up = new Vector3D(0, 1, 0);
     public Vector3D right = new Vector3D(1, 0, 0);
+
     public Vector3D() {
         x = y = z = w = 0;
     }
@@ -44,19 +45,44 @@ public class Vector3D {
         return cross;
     }
 
-    public static Vector3D operator + (Vector3D c1, Vector3D c2) {
+    //public static Vector3D operator +(Vector3D c1, Vector3D c2) {
+    //    return new Vector3D(c1.x + c2.x, c1.y + c2.y, c1.z + c2.z);
+    //}
+
+    //public static Vector3D operator -(Vector3D c1, Vector3D c2) {
+    //    return new Vector3D(c1.x - c2.x, c1.y - c2.y, c1.z - c2.z);
+    //}
+
+    public static Vector3D Sum(Vector3D c1, Vector3D c2) {
         return new Vector3D(c1.x + c2.x, c1.y + c2.y, c1.z + c2.z);
     }
 
-    public static Vector3D operator -(Vector3D c1, Vector3D c2) {
-        return new Vector3D(c1.x - c2.x, c1.y - c2.y, c1.z - c2.z);
-    }
+    //public static Vector3D operator *(Vector3D c1, Quaternion c2) {
+    //    return new Vector3D();
+    //}
 
-    public static Vector3D operator *(Vector3D c1, Quaternion c2) {
-        return new Vector3D();
-    }
-    public static Vector3D operator *(Quaternion q, Vector3D v) {
+    //public static Vector3D operator *(Quaternion q, Vector3D vec) {
+    //Quaternion quat;
 
-        return new Vector3D();
-    }
+    //quat = q * Quaternion.Inverse(q);
+
+
+    //float num = quat.x * 2f;
+    //float num2 = quat.y * 2f;
+    //float num3 = quat.z * 2f;
+    //float num4 = quat.x * num;
+    //float num5 = quat.y * num2;
+    //float num6 = quat.z * num3;
+    //float num7 = quat.x * num2;
+    //float num8 = quat.x * num3;
+    //float num9 = quat.y * num3;
+    //float num10 = quat.w * num;
+    //float num11 = quat.w * num2;
+    //float num12 = quat.w * num3;
+    //      Vector3D result = new Vector3D();
+    //result.x = (1f - (num5 + num6)) * vec.x + (num7 - num12) * vec.y + (num8 + num11) * vec.z;
+    // result.y = (num7 + num12) * vec.x + (1f - (num4 + num6)) * vec.y + (num9 - num10) * vec.z;
+    // result.z = (num8 - num11) * vec.x + (num9 + num10) * vec.y + (1f - (num4 + num5)) * vec.z;
+    //        return result;
+    //}
 }
