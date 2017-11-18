@@ -4,22 +4,37 @@ using UnityEngine;
 
 public class Vector3D {
     public float x, y, z, w;
-    public Vector3D front = new Vector3D(0, 0, 1);
-    public Vector3D up = new Vector3D(0, 1, 0);
-    public Vector3D right = new Vector3D(1, 0, 0);
+    public Vector3D front;
+    public Vector3D up;
+    public Vector3D right;
 
     public Vector3D() {
         x = y = z = w = 0;
+        front = new Vector3D(0, 0, 1, false);
+        up = new Vector3D(0, 1, 0, false);
+        right = new Vector3D(1, 0, 0, false);
+    }
+    public Vector3D(float x, float y, float z, bool b) {
+        this.x = x;
+        this.y = y;
+        this.z = z;
+        w = 0;
     }
     public Vector3D(float n) {
         x = y = z = n;
         w = 0;
+        front = new Vector3D(0, 0, 1, false);
+        up = new Vector3D(0, 1, 0, false);
+        right = new Vector3D(1, 0, 0, false);
     }
     public Vector3D(float x, float y, float z) {
         this.x = x;
         this.y = y;
         this.z = z;
         w = 0;
+        front = new Vector3D(0, 0, 1, false);
+        up = new Vector3D(0, 1, 0, false);
+        right = new Vector3D(1, 0, 0, false);
     }
 
     public Vector3D Normalized() {
@@ -29,6 +44,13 @@ public class Vector3D {
         vec.y = y / mag;
         vec.z = z / mag;
         return vec;
+    }
+    public static Vector3D Sum(Vector3D v1, Vector3D v2) {
+        Vector3D sum = new Vector3D(0);
+        sum.x = v1.x + v2.x;
+        sum.y = v1.y + v2.y;
+        sum.z = v1.z + v2.z;
+        return sum;
     }
 
     public static float Dot(Vector3D v1, Vector3D v2) {
@@ -53,9 +75,7 @@ public class Vector3D {
     //    return new Vector3D(c1.x - c2.x, c1.y - c2.y, c1.z - c2.z);
     //}
 
-    public static Vector3D Sum(Vector3D c1, Vector3D c2) {
-        return new Vector3D(c1.x + c2.x, c1.y + c2.y, c1.z + c2.z);
-    }
+
 
     //public static Vector3D operator *(Vector3D c1, Quaternion c2) {
     //    return new Vector3D();
