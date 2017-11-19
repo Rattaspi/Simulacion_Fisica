@@ -8,7 +8,8 @@ public class stuff : MonoBehaviour {
     void Update () {
         //Debug.Log(new Quaternion(2,2,2,2) * new Vector3(2, 2, 2));
         // Debug.Log(new Quaternion(2, 2, 2, 2) * new Vector3D(2, 2, 2));
-        Debug.Log(Vector3D.Sum(new Vector3D(1), new Vector3D(1)).x);
+        Debug.Log(new Quaternion(2, 5, 9, 25) * new Vector3(3, 6, 5));
+        (new Quaternion(2, 5, 9, 25) * new Vector3D(3, 6, 5)).Print();
     }
 
 }
