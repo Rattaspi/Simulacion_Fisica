@@ -46,10 +46,20 @@ public class Vector3D {
         return cross;
     }
 
+    public void Set(float x, float y, float z) {
+        this.x = x;
+        this.y = y;
+        this.z = z;
+    }
+
     public void Print() {
         Debug.Log("(" + x + "," + y + "," + z + ")");
     }
 
+
+    /*
+     * Sobrecarga de operadores 
+     */
     public static Vector3D operator +(Vector3D c1, Vector3D c2) {
        return new Vector3D(c1.x + c2.x, c1.y + c2.y, c1.z + c2.z);
     }
