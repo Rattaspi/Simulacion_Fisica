@@ -56,6 +56,23 @@ public class Vector3D {
         Debug.Log("(" + x + "," + y + "," + z + ")");
     }
 
+    public static Vector3D ToVector3D(Vector3 a) {
+        Vector3D temp = new Vector3D();
+        temp.x = a.x;
+        temp.y = a.y;
+        temp.z = a.z;
+
+        return temp;
+    }
+    public Vector3 ToVector3() {
+        Vector3 temp = new Vector3();
+        temp.x = x;
+        temp.y = y;
+        temp.z = z;
+
+        return temp;
+    }
+
 
     /*
      * Sobrecarga de operadores 
