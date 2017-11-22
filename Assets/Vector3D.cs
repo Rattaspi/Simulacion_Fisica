@@ -68,8 +68,8 @@ public class Vector3D {
         return new Vector3D(c1.x - c2.x, c1.y - c2.y, c1.z - c2.z);
     }
 
-    public static Vector3D operator *(Quaternion q, Vector3D vec) {
-        Quaternion quat;
+    public static Vector3D operator *(Quat q, Vector3D vec) {
+        Quat quat;
         quat = q;
 
         float num = quat.x * 2f;
