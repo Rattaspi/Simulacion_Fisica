@@ -6,7 +6,7 @@ public class Physics : MonoBehaviour{
     private float gLuna;
     private Vector3D position;
     public Vector3 velocityInspector = new Vector3();
-    private Vector3D velocity = new Vector3D();
+    public Vector3D velocity = new Vector3D();
     private Vector3D acceleration;
 	
 	void Start () {
@@ -29,6 +29,6 @@ public class Physics : MonoBehaviour{
             velocity.y + acceleration.y * Time.deltaTime,
             velocity.z + acceleration.z * Time.deltaTime);
 
-        velocity.Print();
+        //velocity.Print();
     }
 }

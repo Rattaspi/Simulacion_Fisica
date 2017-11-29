@@ -1,13 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 
-public class ColisionDetection : MonoBehaviour {
+public class ColisionDetection: UnityEngine.MonoBehaviour{
 
-    public GameObject sphere;
+    public UnityEngine.GameObject sphere;
+    public Physics fisicasEsfera;
     float sphereRadius=0.7f;
-    public GameObject corner1;
-    public GameObject corner2;
+    public UnityEngine.GameObject corner1;
+    public UnityEngine.GameObject corner2;
 
 
 	// Use this for initialization
@@ -18,7 +18,8 @@ public class ColisionDetection : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
         if (Intersects(Vector3D.ToVector3D(corner1.transform.position), Vector3D.ToVector3D(corner2.transform.position), Vector3D.ToVector3D(sphere.transform.position), sphereRadius)){
-            Debug.Log("COOLLIIIIDING IN MY CRAAAAAAAAAAWL");
+            UnityEngine.Debug.Log("COOLLIIIIDING IN MY CRAAAAAAAAAAWL");
+            fisicasEsfera.velocity.x = 0;
         }
 	}
 
