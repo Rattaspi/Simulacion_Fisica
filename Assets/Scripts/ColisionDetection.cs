@@ -1,24 +1,26 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
 
-public class ColisionDetection: UnityEngine.MonoBehaviour{
+public class ColisionDetection: MonoBehaviour{
 
-    public UnityEngine.GameObject sphere;
-    public Physics fisicasEsfera;
+    public GameObject sphere;
+    public GamePhysics fisicasEsfera;
     float sphereRadius=0.7f;
-    public UnityEngine.GameObject corner1;
-    public UnityEngine.GameObject corner2;
+    public GameObject corner1;
+    public GameObject corner2;
+    public GameObject IKObject;
 
 
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+    void Start () {
         sphere.transform.localScale = new Vector3D(1, 1, 1).ToVector3();
     }
 	
 	// Update is called once per frame
 	void Update () {
         if (Intersects(Vector3D.ToVector3D(corner1.transform.position), Vector3D.ToVector3D(corner2.transform.position), Vector3D.ToVector3D(sphere.transform.position), sphereRadius)){
-            UnityEngine.Debug.Log("COOLLIIIIDING IN MY CRAAAAAAAAAAWL");
+            IKObject.GetComponent<ENTICourse.IK.InverseKinematics>().move = false;
             fisicasEsfera.velocity.x = 0;
         }
 	}
