@@ -33,7 +33,7 @@ namespace ENTICourse.IK
     public class InverseKinematics : MonoBehaviour
     {
         public GameObject caja;
-
+        bool unPaused = false;
         public bool useCalculatedPos;
 
         public bool move = true;
@@ -93,6 +93,8 @@ namespace ENTICourse.IK
             float y = Destination.position.y + gamePhysics.velocity.y * t + ((gamePhysics.gLuna*t*t)/2);
             Debug.Log(y);
             target = new Vector3D(30, y, Destination.position.z).ToVector3();
+            caja.transform.position = Joints[Joints.Length - 1].gameObject.transform.position;
+
         }
 
         public void GetJoints()
@@ -106,28 +108,40 @@ namespace ENTICourse.IK
         // Update is called once per frame
         void Update()
         {
-            if (move)
+            if (!FindObjectOfType<GameLogic>().paused)
             {
-                // Do we have to approach the target?
-                //TODO
-                int contador = 0;
-                while (contador < iterationsPerFrame)
-                {
-                    if(!useCalculatedPos)
-                    target = Destination.position;
+                if (!unPaused&&Destination.GetComponent<GamePhysics>().done) {
+                    unPaused = true;
+                    float t = (30 - Vector3D.ToVector3D(Destination.position).x) / gamePhysics.velocity.x;
 
-                    if (ErrorFunction(target, Solution) > StopThreshold)
-                        ApproachTarget(target);
-
-                    if (DebugDraw)
-                    {
-                        Debug.DrawLine(Effector.transform.position, target, Color.green);
-                        //Debug.DrawLine(Destination.transform.position, target, new Color(0, 0.5f, 0));
-                    }
-                    contador++;
+                    float y = Destination.position.y + gamePhysics.velocity.y * t + ((gamePhysics.gLuna * t * t) / 2);
+                    Debug.Log(y);
+                    target = new Vector3D(30, y, Destination.position.z).ToVector3();
+                    caja.transform.position = Joints[Joints.Length - 1].gameObject.transform.position;
                 }
+                if (move)
+                {
+                    // Do we have to approach the target?
+                    //TODO
+                    int contador = 0;
+                    while (contador < iterationsPerFrame)
+                    {
+                        if (!useCalculatedPos)
+                            target = Destination.position;
+
+                        if (ErrorFunction(target, Solution) > StopThreshold)
+                            ApproachTarget(target);
+
+                        if (DebugDraw)
+                        {
+                            Debug.DrawLine(Effector.transform.position, target, Color.green);
+                            //Debug.DrawLine(Destination.transform.position, target, new Color(0, 0.5f, 0));
+                        }
+                        contador++;
+                    }
+                }
+                caja.transform.position = Joints[Joints.Length - 1].gameObject.transform.position;
             }
-            caja.transform.position = Joints[Joints.Length - 1].gameObject.transform.position; 
         }
 
         public void ApproachTarget(Vector3 target)

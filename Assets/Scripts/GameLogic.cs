@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class GameLogic : MonoBehaviour {
-
+    public bool paused = true;
 	// Use this for initialization
 	void Start () {
 		
@@ -16,7 +16,11 @@ public class GameLogic : MonoBehaviour {
         {
             Reset();
         }
-	}
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            paused = !paused;
+        }
+    }
 
     void Reset()
     {

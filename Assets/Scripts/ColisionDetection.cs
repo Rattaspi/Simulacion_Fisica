@@ -18,10 +18,16 @@ public class ColisionDetection: MonoBehaviour{
     }
 	
 	// Update is called once per frame
-	void Update () {
-        if (Intersects(Vector3D.ToVector3D(corner1.transform.position), Vector3D.ToVector3D(corner2.transform.position), Vector3D.ToVector3D(sphere.transform.position), sphereRadius)){
-            IKObject.GetComponent<ENTICourse.IK.InverseKinematics>().move = false;
-            fisicasEsfera.velocity.x = 0;
+	void Update ()
+    {
+        if (!FindObjectOfType<GameLogic>().paused)
+        {
+
+            if (Intersects(Vector3D.ToVector3D(corner1.transform.position), Vector3D.ToVector3D(corner2.transform.position), Vector3D.ToVector3D(sphere.transform.position), sphereRadius))
+            {
+                IKObject.GetComponent<ENTICourse.IK.InverseKinematics>().move = false;
+                fisicasEsfera.velocity.x = 0;
+            }
         }
 	}
 

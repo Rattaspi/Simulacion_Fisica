@@ -8,6 +8,8 @@ public class GamePhysics : MonoBehaviour{
     public Vector3 velocityInspector = new Vector3();
     public Vector3D velocity = new Vector3D();
     private Vector3D acceleration;
+    bool unPaused = false;
+    public bool done = false;
 
     private void Awake()
     {
@@ -22,18 +24,32 @@ public class GamePhysics : MonoBehaviour{
         Time.timeScale = 0.5f;
 	}
 
-	void Update () {
-        position.Set(
-            position.x + velocity.x * Time.deltaTime,
-            position.y + velocity.y * Time.deltaTime,
-            position.z + velocity.z * Time.deltaTime);
-        transform.position = new Vector3(position.x, position.y, position.z);
+    public void SetVelocityX(float a)
+    {
+        velocityInspector.x = a;
+    }
 
-        velocity.Set(
-            velocity.x + acceleration.x * Time.deltaTime,
-            velocity.y + acceleration.y * Time.deltaTime,
-            velocity.z + acceleration.z * Time.deltaTime);
+    void Update()
+    {
+        if (!FindObjectOfType<GameLogic>().paused)
+        {
+            if (!unPaused) { 
+                Awake();
+                unPaused = true;
+                done = true;
+            }
+            position.Set(
+                position.x + velocity.x * Time.deltaTime,
+                position.y + velocity.y * Time.deltaTime,
+                position.z + velocity.z * Time.deltaTime);
+            transform.position = new Vector3(position.x, position.y, position.z);
 
-        //velocity.Print();
+            velocity.Set(
+                velocity.x + acceleration.x * Time.deltaTime,
+                velocity.y + acceleration.y * Time.deltaTime,
+                velocity.z + acceleration.z * Time.deltaTime);
+
+            //velocity.Print();
+        }
     }
 }
