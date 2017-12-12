@@ -6,7 +6,6 @@ namespace ENTICourse.IK
 {
     // A typical error function to minimise
     public delegate float ErrorFunction(Vector3 target, float[] solution);
-
     public struct PositionRotation
     {
         Vector3 position;
@@ -33,6 +32,8 @@ namespace ENTICourse.IK
     //[ExecuteInEditMode]
     public class InverseKinematics : MonoBehaviour
     {
+        public GameObject caja;
+
         public bool useCalculatedPos;
 
         public bool move = true;
@@ -88,7 +89,8 @@ namespace ENTICourse.IK
 
            ErrorFunction = DistanceFromTarget;
             float t = (30 - Vector3D.ToVector3D(Destination.position).x)/gamePhysics.velocity.x;
-            float y = Destination.position.y + gamePhysics.velocity.y * t + 1/2 * gamePhysics.gLuna*t*t;
+
+            float y = Destination.position.y + gamePhysics.velocity.y * t + ((gamePhysics.gLuna*t*t)/2);
             Debug.Log(y);
             target = new Vector3D(30, y, Destination.position.z).ToVector3();
         }
@@ -125,6 +127,7 @@ namespace ENTICourse.IK
                     contador++;
                 }
             }
+            caja.transform.position = Joints[Joints.Length - 1].gameObject.transform.position; 
         }
 
         public void ApproachTarget(Vector3 target)
