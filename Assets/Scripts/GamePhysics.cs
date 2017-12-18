@@ -46,6 +46,7 @@ public class GamePhysics : MonoBehaviour{
                 velocity.z + acceleration.z * Time.deltaTime);
 
             //velocity.Print();
+        //Antes de empezar el movimiento puedes mover la esfera para situar la posicion inicial del disparo
         } else {
             Vector3D vSide = new Vector3D(0, 0, 10 * Time.deltaTime);
             Vector3D vUp = new Vector3D(0, 10 * Time.deltaTime, 0);

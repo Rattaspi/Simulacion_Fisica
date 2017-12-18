@@ -21,10 +21,11 @@ public class GameLogic : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.R)){
             Reset();
         }else if (Input.GetKeyDown(KeyCode.P)){
-            if (!once) {
+            if (!once) { //Esto solo quiero que se haga la primera vez que se inicia la escena
                 CameraBehavior(0);
                 once = true;
             }
+            //Gestion del sistema de particulas de la esfera
             if (sphere.GetComponentInChildren<ParticleSystem>().isStopped) {
                 sphere.GetComponentInChildren<ParticleSystem>().Play();
             } else {
