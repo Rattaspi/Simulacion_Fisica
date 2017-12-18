@@ -13,6 +13,6 @@ public class UpdateText : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        GetComponent<Text>().text = "Velocitat X: " + sliderObject.GetComponent<Slider>().value;
+        GetComponent<Text>().text = "Velocidad X: " + sliderObject.GetComponent<Slider>().value;
 	}
 }

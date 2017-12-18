@@ -11,8 +11,7 @@ public class GamePhysics : MonoBehaviour{
     bool unPaused = false;
     public bool done = false;
 
-    private void Awake()
-    {
+    private void Awake(){
         gLuna = -1.622f;
         position = new Vector3D(transform.position.x, transform.position.y, transform.position.z);
         velocity.Set(velocityInspector.x, velocityInspector.y, velocityInspector.z);
@@ -20,19 +19,16 @@ public class GamePhysics : MonoBehaviour{
     }
 
     void Start () {
-
+        GetComponentInChildren<ParticleSystem>().Stop();
         Time.timeScale = 0.5f;
 	}
 
-    public void SetVelocityX(float a)
-    {
+    public void SetVelocityX(float a){
         velocityInspector.x = a;
     }
 
-    void Update()
-    {
-        if (!FindObjectOfType<GameLogic>().paused)
-        {
+    void Update(){
+        if (!FindObjectOfType<GameLogic>().paused){
             if (!unPaused) { 
                 Awake();
                 unPaused = true;
@@ -50,6 +46,19 @@ public class GamePhysics : MonoBehaviour{
                 velocity.z + acceleration.z * Time.deltaTime);
 
             //velocity.Print();
+        } else {
+            Vector3D vSide = new Vector3D(0, 0, 10 * Time.deltaTime);
+            Vector3D vUp = new Vector3D(0, 10 * Time.deltaTime, 0);
+            if (Input.GetKey(KeyCode.RightArrow)) {
+                transform.position = transform.position - vSide.ToVector3();
+            }else if (Input.GetKey(KeyCode.LeftArrow)) {
+                transform.position = transform.position + vSide.ToVector3();
+            }
+            if (Input.GetKey(KeyCode.UpArrow)) {
+                transform.position = transform.position + vUp.ToVector3();
+            } else if (Input.GetKey(KeyCode.DownArrow)) {
+                transform.position = transform.position - vUp.ToVector3();
+            }
         }
     }
 }
