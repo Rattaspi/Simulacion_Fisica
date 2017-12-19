@@ -1,12 +1,21 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+[System.Serializable]
 public class Vector3D {
     public float x, y, z, w;
     public static Vector3D front = new Vector3D(0,0,1);
     public static Vector3D up = new Vector3D(0,1,0) ;
     public static Vector3D right = new Vector3D(1,0,0);
+
+    // overload operator +
+    public static Vector3D operator +(Vector3D rhs, Vector3D lhs) {
+        return new Vector3D(rhs.x + lhs.x, rhs.y + lhs.y, rhs.z + lhs.z);
+    }
+    // overload operator -
+    public static Vector3D operator -(Vector3D rhs, Vector3D lhs) {
+        return rhs + new Vector3D(-lhs.x,-lhs.y,-lhs.z);
+    }
 
     public Vector3D() {
         x = y = z = w = 0;
@@ -30,6 +39,16 @@ public class Vector3D {
         vec.y = y / mag;
         vec.z = z / mag;
         return vec;
+    }
+
+    static public float Distance(Vector3D a, Vector3D b) {
+        Vector3D vec = b-a;
+        //Debug.Log("a -> " +a.x + " , " + a.y + " , " + a.z);
+        //Debug.Log("b -> " + b.x + " , " + b.y + " , " + b.z);
+        //Debug.Log(vec.x + "   " +  vec.y + "   " + vec.z);
+        //Debug.Log(Mathf.Sqrt(vec.x * vec.x + vec.y * vec.y + vec.z * vec.z));
+
+        return Mathf.Sqrt(((vec.x * vec.x) + (vec.y * vec.y) + (vec.z * vec.z)));
     }
 
     public static float Dot(Vector3D v1, Vector3D v2) {
@@ -77,13 +96,6 @@ public class Vector3D {
     /*
      * Sobrecarga de operadores 
      */
-    public static Vector3D operator +(Vector3D c1, Vector3D c2) {
-       return new Vector3D(c1.x + c2.x, c1.y + c2.y, c1.z + c2.z);
-    }
-
-    public static Vector3D operator -(Vector3D c1, Vector3D c2) {
-        return new Vector3D(c1.x - c2.x, c1.y - c2.y, c1.z - c2.z);
-    }
 
     public static Vector3D operator *(Quat q, Vector3D vec) {
         Quat quat;

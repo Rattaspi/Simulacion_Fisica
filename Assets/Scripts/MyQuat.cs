@@ -84,11 +84,11 @@ public class MyQuat {
         }
 
 
-    public static MyQuat AxisAngleToMyQuat(Vector3 axis, float angle) {
+    public static MyQuat AxisAngleToMyQuat(Vector3D axis, float angle) {
 
         float localAngle = angle * Mathf.Deg2Rad;
 
-        Vector3 temp = axis.normalized;
+        Vector3D temp = axis.Normalized();
         MyQuat result = new MyQuat();
         result.w = Mathf.Cos(localAngle / 2);
         result.x = temp.x * Mathf.Sin(localAngle / 2);

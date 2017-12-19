@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+[System.Serializable]
 public class Quat {
     public float w, x, y, z;
     // Use this for initialization
@@ -11,6 +11,13 @@ public class Quat {
         this.x = x;
         this.y = y;
         this.z = z;
+    }
+
+    public Quat(Quaternion q) {
+        w = q.w;
+        x = q.x;
+        y = q.y;
+        z = q.z;
     }
 
     public Quat() {
@@ -81,10 +88,9 @@ public class Quat {
         }
 
 
-    public static Quat AxisAngleToMyQuat(Vector3 axis, float angle) {
+    public static Quat AxisAngleToMyQuat(Vector3D axis, float angle) {
         float localAngle = angle * Mathf.Deg2Rad;
-
-        Vector3 temp = axis.normalized;
+        Vector3D temp = axis.Normalized();
         Quat result = new Quat();
         result.w = Mathf.Cos(localAngle / 2);
         result.x = temp.x * Mathf.Sin(localAngle / 2);

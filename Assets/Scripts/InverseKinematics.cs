@@ -5,25 +5,25 @@ using UnityEngine;
 namespace ENTICourse.IK
 {
     // A typical error function to minimise
-    public delegate float ErrorFunction(Vector3 target, float[] solution);
+    public delegate float ErrorFunction(Vector3D target, float[] solution);
     public struct PositionRotation
     {
-        Vector3 position;
-        Quaternion rotation;
+        Vector3D position;
+        Quat rotation;
 
-        public PositionRotation(Vector3 position, Quaternion rotation)
+        public PositionRotation(Vector3D position, Quat rotation)
         {
             this.position = position;
             this.rotation = rotation;
         }
 
         // PositionRotation to Vector3
-        public static implicit operator Vector3(PositionRotation pr)
+        public static implicit operator Vector3D(PositionRotation pr)
         {
             return pr.position;
         }
         // PositionRotation to Quaternion
-        public static implicit operator Quaternion(PositionRotation pr)
+        public static implicit operator Quat(PositionRotation pr)
         {
             return pr.rotation;
         }
@@ -54,7 +54,7 @@ namespace ENTICourse.IK
         [Space]
         public Transform Destination;
         public float DistanceFromDestination;
-        private Vector3 target;
+        private Vector3D target;
 
         [Header("Inverse Kinematics")]
         [Range(0, 1f)]
@@ -88,11 +88,11 @@ namespace ENTICourse.IK
             gamePhysics = Destination.gameObject.GetComponent<GamePhysics>();
 
            ErrorFunction = DistanceFromTarget;
-            float t = (30 - Vector3D.ToVector3D(Destination.position).x)/gamePhysics.velocity.x;
+            float t = (30 - (Destination.position).x)/gamePhysics.velocity.x;
 
             float y = Destination.position.y + gamePhysics.velocity.y * t + ((gamePhysics.gLuna*t*t)/2);
             Debug.Log(y);
-            target = new Vector3D(30, y, Destination.position.z).ToVector3();
+            target = new Vector3D(30, y, Destination.position.z);
             caja.transform.position = Joints[Joints.Length - 1].gameObject.transform.position;
 
         }
@@ -116,7 +116,7 @@ namespace ENTICourse.IK
 
                     float y = Destination.position.y + gamePhysics.velocity.y * t + ((gamePhysics.gLuna * t * t) / 2);
                     Debug.Log(y);
-                    target = new Vector3D(30, y, Destination.position.z).ToVector3();
+                    target = new Vector3D(30, y, Destination.position.z);
                     caja.transform.position = Joints[Joints.Length - 1].gameObject.transform.position;
                 }
                 if (move)
@@ -127,14 +127,14 @@ namespace ENTICourse.IK
                     while (contador < iterationsPerFrame)
                     {
                         if (!useCalculatedPos)
-                            target = Destination.position;
+                            target = Vector3D.ToVector3D(Destination.position);
 
                         if (ErrorFunction(target, Solution) > StopThreshold)
                             ApproachTarget(target);
 
                         if (DebugDraw)
                         {
-                            Debug.DrawLine(Effector.transform.position, target, Color.green);
+                            Debug.DrawLine(Effector.transform.position, target.ToVector3(), Color.green);
                             //Debug.DrawLine(Destination.transform.position, target, new Color(0, 0.5f, 0));
                         }
                         contador++;
@@ -144,7 +144,7 @@ namespace ENTICourse.IK
             }
         }
 
-        public void ApproachTarget(Vector3 target)
+        public void ApproachTarget(Vector3D target)
         {
             for(int i = 0; i < Solution.Length; i++) {
                 Solution[i] = Solution[i]-LearningRate*CalculateGradient(target, Solution,i,DeltaGradient);
@@ -154,7 +154,7 @@ namespace ENTICourse.IK
         }
 
         
-        public float CalculateGradient(Vector3 target, float[] Solution, int i, float delta)
+        public float CalculateGradient(Vector3D target, float[] Solution, int i, float delta)
         {
             float a = DistanceFromTarget(target, Solution);
             Solution[i] += delta;
@@ -163,10 +163,13 @@ namespace ENTICourse.IK
         }
 
         // Returns the distance from the target, given a solution
-        public float DistanceFromTarget(Vector3 target, float[] Solution)
+        public float DistanceFromTarget(Vector3D target, float[] Solution)
         {
-            Vector3 point = ForwardKinematics(Solution);
-            return Vector3.Distance( target, point);
+            Vector3D point = ForwardKinematics(Solution);
+            //Debug.Log("Original ->" + Vector3.Distance(target,point.ToVector3()));
+            //Debug.Log("Nuevo ->" + Vector3D.Distance(Vector3D.ToVector3D(target), point));
+            //Vector3D.Distance(Vector3D.ToVector3D(target), point);
+            return Vector3D.Distance( target, point);
         }
 
 
@@ -189,17 +192,17 @@ namespace ENTICourse.IK
 
             //Vector3 rotatedVector = temp * distanceToNextJoin;
 
-            Vector3 prevPoint = Joints[0].transform.position;
+            Vector3D prevPoint = Vector3D.ToVector3D(Joints[0].transform.position);
 
-            Quaternion rotation = transform.rotation;
+            Quat rotation = new Quat(transform.rotation);
 
             //Vector3 nextPoint;
 
             for(int i = 1; i < Joints.Length; i++) {
-                rotation *= Quaternion.AngleAxis(Solution[i - 1], Joints[i - 1].Axis);
-                Vector3 nextPoint = prevPoint + rotation * Joints[i].StartOffset;
+                rotation = Quat.Multiply(rotation , Quat.AxisAngleToMyQuat( Joints[i - 1].Axis, Solution[i - 1]));
+                Vector3D nextPoint = prevPoint + rotation * Joints[i].StartOffset;
                 if (DebugDraw) {
-                    Debug.DrawLine(prevPoint, nextPoint, Color.blue);
+                    Debug.DrawLine(prevPoint.ToVector3(), nextPoint.ToVector3(), Color.blue);
                 }
                 prevPoint = nextPoint;
 
