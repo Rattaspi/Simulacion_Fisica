@@ -91,7 +91,7 @@ namespace ENTICourse.IK
             float t = (30 - (Destination.position).x)/gamePhysics.velocity.x;
 
             float y = Destination.position.y + gamePhysics.velocity.y * t + ((gamePhysics.gLuna*t*t)/2);
-            Debug.Log(y);
+            //Debug.Log(y);
             target = new Vector3D(30, y, Destination.position.z);
             caja.transform.position = Joints[Joints.Length - 1].gameObject.transform.position;
 
@@ -115,7 +115,7 @@ namespace ENTICourse.IK
                     float t = (30 - Vector3D.ToVector3D(Destination.position).x) / gamePhysics.velocity.x;
 
                     float y = Destination.position.y + gamePhysics.velocity.y * t + ((gamePhysics.gLuna * t * t) / 2);
-                    Debug.Log(y);
+                    //Debug.Log(y);
                     target = new Vector3D(30, y, Destination.position.z);
                     caja.transform.position = Joints[Joints.Length - 1].gameObject.transform.position;
                 }

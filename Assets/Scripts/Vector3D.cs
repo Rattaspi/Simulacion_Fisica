@@ -17,6 +17,22 @@ public class Vector3D {
         return rhs + new Vector3D(-lhs.x,-lhs.y,-lhs.z);
     }
 
+    public static Vector3D operator /(Vector3D rhs, float lhs) {
+        return new Vector3D(-rhs.x / lhs, -rhs.y / lhs, -rhs.z / lhs);
+    }
+
+    public static Vector3D operator *(Vector3D rhs, float lhs) {
+        return new Vector3D(-rhs.x * lhs, -rhs.y * lhs, -rhs.z * lhs);
+    }
+
+    public static Vector3D operator *(float lhs, Vector3D rhs) {
+        return new Vector3D(-rhs.x * lhs, -rhs.y * lhs, -rhs.z * lhs);
+    }
+
+    public static Vector3D operator -(Vector3D rhs) {
+        return new Vector3D(-rhs.x, -rhs.y, -rhs.z);
+    }
+
     public Vector3D() {
         x = y = z = w = 0;
     }
@@ -32,9 +48,20 @@ public class Vector3D {
         w = 0;
     }
 
+    static public float Angle(Vector3D v1, Vector3D v2) {
+        
+        float sin = (Cross(v1, v2)).Magnitude() / (v2.Magnitude() * v1.Magnitude());
+        float cos = (Dot(v1, v2)) / (v2.Magnitude() * v1.Magnitude());
+        return Mathf.Rad2Deg * Mathf.Atan2(sin, cos);
+    }
+
+    public float Magnitude() {
+        return Mathf.Sqrt(x * x + y * y + z * z);
+    }
+
     public Vector3D Normalized() {
         Vector3D vec = new Vector3D();
-        float mag = Mathf.Sqrt(x * x + y * y + z * z);
+        float mag = Magnitude();
         vec.x = x / mag;
         vec.y = y / mag;
         vec.z = z / mag;
@@ -43,10 +70,6 @@ public class Vector3D {
 
     static public float Distance(Vector3D a, Vector3D b) {
         Vector3D vec = b-a;
-        //Debug.Log("a -> " +a.x + " , " + a.y + " , " + a.z);
-        //Debug.Log("b -> " + b.x + " , " + b.y + " , " + b.z);
-        //Debug.Log(vec.x + "   " +  vec.y + "   " + vec.z);
-        //Debug.Log(Mathf.Sqrt(vec.x * vec.x + vec.y * vec.y + vec.z * vec.z));
 
         return Mathf.Sqrt(((vec.x * vec.x) + (vec.y * vec.y) + (vec.z * vec.z)));
     }

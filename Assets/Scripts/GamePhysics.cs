@@ -10,8 +10,10 @@ public class GamePhysics : MonoBehaviour{
     private Vector3D acceleration;
     bool unPaused = false;
     public bool done = false;
+    public float sphereMass;
 
     private void Awake(){
+        sphereMass = 1;
         gLuna = -1.622f;
         position = new Vector3D(transform.position.x, transform.position.y, transform.position.z);
         velocity.Set(velocityInspector.x, velocityInspector.y, velocityInspector.z);
