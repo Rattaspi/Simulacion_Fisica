@@ -10,8 +10,6 @@ public class ColisionDetection: MonoBehaviour{
     public GameObject corner1;
     public GameObject corner2;
     public GameObject IKObject;
-
-
     // Use this for initialization
     void Start () {
         sphere.transform.localScale = new Vector3D(1, 1, 1).ToVector3();
@@ -25,7 +23,13 @@ public class ColisionDetection: MonoBehaviour{
 
             if (Intersects(Vector3D.ToVector3D(corner1.transform.position), Vector3D.ToVector3D(corner2.transform.position), Vector3D.ToVector3D(sphere.transform.position), sphereRadius))
             {
-                IKObject.GetComponent<InverseKinematics>().move = false;
+                if (!IKObject.GetComponent<PhysicalReaction>().active) {
+                    IKObject.GetComponent<PhysicalReaction>().velocidadRecibida = new Vector3D(fisicasEsfera.velocity.x, fisicasEsfera.velocity.y, fisicasEsfera.velocity.z);
+                    IKObject.GetComponent<PhysicalReaction>().active = true;
+                    IKObject.GetComponent<PhysicalReaction>().sphereMass = fisicasEsfera.sphereMass;
+
+                }
+                IKObject.GetComponent<ENTICourse.IK.InverseKinematics>().move = false;
                 fisicasEsfera.velocity.x = 0;
                 fisicasEsfera.gameObject.GetComponentInChildren<ParticleSystem>().Stop(); 
             }
