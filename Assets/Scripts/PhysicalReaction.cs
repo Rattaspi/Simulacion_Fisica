@@ -27,8 +27,8 @@ public class PhysicalReaction : MonoBehaviour {
                 initialHit = true;
 
                 Vector3D F1 = sphereMass * (-velocidadRecibida) / contactTime;
-                angles[0] = (Vector3D.Angle(F1, (Vector3D.ToVector3D(GetComponent<ENTICourse.IK.InverseKinematics>().Joints[GetComponent<ENTICourse.IK.InverseKinematics>().Joints.Length - 1].gameObject.transform.position)- Vector3D.ToVector3D(GetComponent<ENTICourse.IK.InverseKinematics>().Joints[GetComponent<ENTICourse.IK.InverseKinematics>().Joints.Length - 2].gameObject.transform.position))));
-                distances[0] = (Vector3D.ToVector3D(GetComponent<ENTICourse.IK.InverseKinematics>().Joints[GetComponent<ENTICourse.IK.InverseKinematics>().Joints.Length - 1].gameObject.transform.position) - Vector3D.ToVector3D(GetComponent<ENTICourse.IK.InverseKinematics>().Joints[GetComponent<ENTICourse.IK.InverseKinematics>().Joints.Length - 2].gameObject.transform.position));
+                angles[0] = (Vector3D.Angle(F1, (Vector3D.ToVector3D(GetComponent<InverseKinematics>().Joints[GetComponent<InverseKinematics>().Joints.Length - 1].gameObject.transform.position)- Vector3D.ToVector3D(GetComponent<InverseKinematics>().Joints[GetComponent<InverseKinematics>().Joints.Length - 2].gameObject.transform.position))));
+                distances[0] = (Vector3D.ToVector3D(GetComponent<InverseKinematics>().Joints[GetComponent<InverseKinematics>().Joints.Length - 1].gameObject.transform.position) - Vector3D.ToVector3D(GetComponent<InverseKinematics>().Joints[GetComponent<InverseKinematics>().Joints.Length - 2].gameObject.transform.position));
 
                 Vector3D F1X = F1 * Mathf.Cos(Mathf.Deg2Rad * angles[0]);
                 Vector3D F1Y = F1 * Mathf.Sin(Mathf.Deg2Rad * angles[0]);
