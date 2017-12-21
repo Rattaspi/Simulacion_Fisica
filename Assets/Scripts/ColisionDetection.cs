@@ -25,7 +25,7 @@ public class ColisionDetection: MonoBehaviour{
 
             if (Intersects(Vector3D.ToVector3D(corner1.transform.position), Vector3D.ToVector3D(corner2.transform.position), Vector3D.ToVector3D(sphere.transform.position), sphereRadius))
             {
-                IKObject.GetComponent<ENTICourse.IK.InverseKinematics>().move = false;
+                IKObject.GetComponent<InverseKinematics>().move = false;
                 fisicasEsfera.velocity.x = 0;
                 fisicasEsfera.gameObject.GetComponentInChildren<ParticleSystem>().Stop(); 
             }
