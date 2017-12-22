@@ -185,7 +185,7 @@ public class InverseKinematics : MonoBehaviour {
         //Vector3 nextPoint;
 
         for (int i = 1; i < Joints.Length; i++) {
-            rotation = Quat.Multiply(rotation, Quat.AxisAngleToMyQuat(Joints[i - 1].Axis, Solution[i - 1]));
+            rotation = rotation * Quat.AxisAngleToMyQuat(Joints[i - 1].Axis, Solution[i - 1]);
             Vector3D nextPoint = prevPoint + rotation * Joints[i].StartOffset;
             if (DebugDraw) {
                 Debug.DrawLine(prevPoint.ToVector3(), nextPoint.ToVector3(), Color.blue);

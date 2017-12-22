@@ -55,14 +55,16 @@ public class PhysicalReaction : MonoBehaviour {
 
             }
             if(angularVelocity1 > 0.001) {
-                //joints[joints.Length - 2].gameObject.transform.rotation = Quaternion.AngleAxis(angularVelocity1 * Time.deltaTime, joints[joints.Length-2].Axis.ToVector3()) * joints[joints.Length - 2].gameObject.transform.rotation;
-                joints[joints.Length - 2].gameObject.transform.rotation = Quaternion.AngleAxis((angularVelocity1*Mathf.Rad2Deg) * Time.deltaTime, axis[0].ToVector3()) * joints[joints.Length - 2].gameObject.transform.rotation;
-                angularVelocity1 -= angularVelocity1 / 30;
-                
+                // joints[joints.Length - 2].gameObject.transform.rotation = Quaternion.AngleAxis((angularVelocity1*Mathf.Rad2Deg) * Time.deltaTime, axis[0].ToVector3()) * joints[joints.Length - 2].gameObject.transform.rotation;
+                joints[joints.Length - 2].gameObject.transform.rotation = (Quat.AxisAngleToMyQuat(axis[0], (angularVelocity1 * Mathf.Rad2Deg) * Time.deltaTime) * Quat.toQuat(joints[joints.Length - 2].gameObject.transform.rotation)).ToQuaternion();
+                angularVelocity1 -= angularVelocity1 * Time.deltaTime *4;
 
                 //SEGUNDO SEGMENTO DEL BRAZO
-                joints[joints.Length - 3].gameObject.transform.rotation = Quaternion.AngleAxis((angularVelocity1 * Mathf.Rad2Deg) * Time.deltaTime, axis[1].ToVector3()) * joints[joints.Length - 3].gameObject.transform.rotation;
-                angularVelocity2 -= angularVelocity2 / 30;
+                //joints[joints.Length - 3].gameObject.transform.rotation = Quaternion.AngleAxis((angularVelocity2 * Mathf.Rad2Deg) * Time.deltaTime, axis[1].ToVector3()) * joints[joints.Length - 3].gameObject.transform.rotation;
+                joints[joints.Length - 3].gameObject.transform.rotation = (Quat.AxisAngleToMyQuat(axis[1], (angularVelocity2 * Mathf.Rad2Deg) * Time.deltaTime) * Quat.toQuat(joints[joints.Length - 3].gameObject.transform.rotation)).ToQuaternion();
+
+
+                angularVelocity2 -= (angularVelocity2 * Time.deltaTime)*4;
             }
         }
 	}

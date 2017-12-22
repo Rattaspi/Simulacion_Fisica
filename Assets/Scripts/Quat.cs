@@ -6,6 +6,16 @@ public class Quat {
     public float w, x, y, z;
     // Use this for initialization
 
+    public static Quat operator *(Quat quat1, Quat quat2) {
+        Quat temp = new Quat();
+
+        temp.w = quat1.w * quat2.w - quat1.x * quat2.x - quat1.y * quat2.y - quat1.z * quat2.z;
+        temp.x = quat1.x * quat2.w + quat1.w * quat2.x + quat1.y * quat2.z - quat1.z * quat2.y;
+        temp.y = quat1.w * quat2.y - quat1.x * quat2.z + quat1.y * quat2.w + quat1.z * quat2.x;
+        temp.z = quat1.w * quat2.z + quat1.x * quat2.y - quat1.y * quat2.x + quat1.z * quat2.w;
+        return temp;
+    }
+
     public Quat(float w,float x, float y, float z) {
         this.w = w;
         this.x = x;
@@ -40,16 +50,6 @@ public class Quat {
 
     public static Quat Inverse(Quat quat) {
         return new Quat(quat.w, -quat.x, -quat.y, -quat.z);
-    }
-
-    public static Quat Multiply(Quat quat1, Quat quat2) {
-        Quat temp = new Quat();
-
-        temp.w = quat1.w * quat2.w - quat1.x * quat2.x - quat1.y * quat2.y - quat1.z * quat2.z;
-        temp.x = quat1.x * quat2.w + quat1.w * quat2.x + quat1.y * quat2.z - quat1.z * quat2.y;
-        temp.y = quat1.w * quat2.y - quat1.x * quat2.z + quat1.y * quat2.w + quat1.z * quat2.x;
-        temp.z = quat1.w * quat2.z + quat1.x * quat2.y - quat1.y * quat2.x + quat1.z * quat2.w;
-        return temp;
     }
 
     public static void SetRotation(GameObject a, Quat myQuat) {
@@ -87,7 +87,7 @@ public class Quat {
             return result;
         }
 
-
+    //RECIBE UN ANGULO EN DEGREES 
     public static Quat AxisAngleToMyQuat(Vector3D axis, float angle) {
         float localAngle = angle * Mathf.Deg2Rad;
         Vector3D temp = axis.Normalized();
@@ -100,6 +100,24 @@ public class Quat {
         result = Normalize(result);
         return result;
     }
+
+    //public static Quaternion AxisAngleToQuaternion(Vector3D axis, float angle) {
+    //    float localAngle = angle * Mathf.Deg2Rad;
+    //    Vector3D temp = axis.Normalized();
+    //    Quaternion result = new Quaternion();
+    //    result.w = Mathf.Cos(localAngle / 2);
+    //    result.x = temp.x * Mathf.Sin(localAngle / 2);
+    //    result.y = temp.y * Mathf.Sin(localAngle / 2);
+    //    result.z = temp.z * Mathf.Sin(localAngle / 2);
+
+    //    //result = (result);
+
+        
+
+    //    return result;
+    //}
+
+
 
     public static void MyQuatToAxisAngle(Quat myQuat,Vector3 axis, float angle) {
         Quat temp = temp = Normalize(myQuat);
@@ -118,6 +136,10 @@ public class Quat {
 
     public Quaternion ToQuaternion() {
         return new Quaternion(x,y,z,w);
+    }
+
+    public static Quat toQuat(Quaternion a) {
+        return new Quat(a.w, a.x, a.y, a.z);
     }
 
     public void Print() {
