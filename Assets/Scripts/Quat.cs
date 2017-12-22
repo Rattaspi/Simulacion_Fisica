@@ -116,4 +116,11 @@ public class Quat {
         yaw = Mathf.Atan2(q.w * q.y - q.x * q.z, q.x * q.y + q.w * q.z);
     }
 
+    public Quaternion ToQuaternion() {
+        return new Quaternion(x,y,z,w);
+    }
+
+    public void Print() {
+        Debug.Log("(" + x + "," + y + "," + z + ", " + w + ")");
+    }
 }
