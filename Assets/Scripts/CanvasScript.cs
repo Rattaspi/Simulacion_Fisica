@@ -19,7 +19,7 @@ public class CanvasScript : MonoBehaviour {
         elasticityC.value = reactor.elasticityC;
         contactTime.value = reactor.contactTime;
         mecanicResistance.value = reactor.mechanichRes;
-        Debug.Log(reactor.mechanichRes);
+        //Debug.Log(reactor.mechanichRes);
 
 	}
 	

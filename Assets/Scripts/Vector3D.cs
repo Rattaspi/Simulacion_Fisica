@@ -36,7 +36,14 @@ public class Vector3D {
     public Vector3D() {
         x = y = z = w = 0;
     }
-   
+    public Vector3D(Vector3 a) {
+        x = a.x;
+        y = a.y;
+        z = a.z;
+        w = 0;
+
+    }
+
     public Vector3D(float n) {
         x = y = z = n;
         w = 0;

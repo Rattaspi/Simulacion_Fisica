@@ -29,6 +29,7 @@ public class ColisionDetection: MonoBehaviour{
                     IKObject.GetComponent<PhysicalReaction>().sphereMass = fisicasEsfera.sphereMass;
 
                 }
+                IKObject.GetComponent<PhysicalReaction>().drawForces = true;
                 IKObject.GetComponent<InverseKinematics>().move = false;
                 fisicasEsfera.velocity.x = 0;
                 fisicasEsfera.gameObject.GetComponentInChildren<ParticleSystem>().Stop(); 

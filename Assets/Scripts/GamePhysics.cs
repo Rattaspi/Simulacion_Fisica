@@ -30,6 +30,9 @@ public class GamePhysics : MonoBehaviour{
     }
 
     void Update(){
+
+        Debug.DrawLine(gameObject.transform.position, (new Vector3D(gameObject.transform.position) + velocity / velocity.Magnitude() * 25).ToVector3(),Color.blue);
+
         if (!FindObjectOfType<GameLogic>().paused){
             if (!unPaused) { 
                 Awake();

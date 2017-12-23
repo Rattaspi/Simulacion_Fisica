@@ -6,7 +6,7 @@ public class PhysicalReaction : MonoBehaviour {
     public float elasticityC;
     public float contactTime;
     public float mechanichRes;
-
+    public GameObject Emisor;
     public Vector3D velocidadRecibida;
     public bool active;
     public bool initialHit;
@@ -18,7 +18,10 @@ public class PhysicalReaction : MonoBehaviour {
     float[] angles;
     Vector3D[] distances, axis;
     private RobotJoint[] joints;
-
+    Vector3D[] forces;
+    public bool drawForces;
+    float timeToDrawForces = 0.5f;
+    float drawForcesTimer;
 	// Use this for initialization
 	void Start () {
         angles = new float[3];
@@ -28,16 +31,36 @@ public class PhysicalReaction : MonoBehaviour {
         contactTime = 0.1f;
         mechanichRes = 0.25f;
         elasticityC = 0;
+        forces = new Vector3D[3];
+        drawForcesTimer = 0;
+
     }
 	
 	// Update is called once per frame
 	void Update () {
-        Debug.Log(mechanichRes);
+        if (drawForces&&forces[0]!=null) {
+            //Debug.Log(Emisor.gameObject.transform.position);
+            //Debug.Log(forces[0]);
+            Debug.DrawLine(Emisor.gameObject.transform.position, ((new Vector3D(Emisor.gameObject.transform.position) + forces[0] / forces[0].Magnitude() * 25).ToVector3()), Color.red);
+
+
+
+            drawForcesTimer += Time.deltaTime;
+            if (drawForcesTimer > timeToDrawForces) {
+                drawForces = false;
+            }
+        }
+
+
+        //Debug.Log(mechanichRes);
         if (active) {
             if (!initialHit) {
                 initialHit = true;
-
                 Vector3D F1 = sphereMass * ((-velocidadRecibida) / contactTime);
+                Debug.Log(F1);
+
+                forces[0] = F1;
+                forces[0].x *= -1;
                 angles[0] = Vector3D.Angle(F1, (Vector3D.ToVector3D(joints[joints.Length - 1].gameObject.transform.position)- Vector3D.ToVector3D(joints[joints.Length - 2].gameObject.transform.position)));
                 distances[0] = Vector3D.ToVector3D(joints[joints.Length - 1].gameObject.transform.position) - Vector3D.ToVector3D(joints[joints.Length - 2].gameObject.transform.position);
                 axis[0] = Vector3D.Cross(F1, distances[0]).Normalized();
