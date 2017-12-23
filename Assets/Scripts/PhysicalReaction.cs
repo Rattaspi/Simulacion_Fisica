@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class PhysicalReaction : MonoBehaviour {
+    public float elasticityC;
+    public float contactTime;
+    public float mechanichRes;
+
     public Vector3D velocidadRecibida;
     public bool active;
     public bool initialHit;
@@ -10,7 +14,6 @@ public class PhysicalReaction : MonoBehaviour {
     public float sphereMass = 1f;
     public Vector3D linearVelocity1, linearVelocity2;
     public float angularVelocity1, angularVelocity2;
-    public float contactTime;
 
     float[] angles;
     Vector3D[] distances, axis;
@@ -23,10 +26,13 @@ public class PhysicalReaction : MonoBehaviour {
         axis = new Vector3D[3];
         joints = GetComponent<InverseKinematics>().Joints;
         contactTime = 0.1f;
+        mechanichRes = 0.25f;
+        elasticityC = 0;
     }
 	
 	// Update is called once per frame
 	void Update () {
+        Debug.Log(mechanichRes);
         if (active) {
             if (!initialHit) {
                 initialHit = true;
@@ -57,15 +63,32 @@ public class PhysicalReaction : MonoBehaviour {
             if(angularVelocity1 > 0.001) {
                 // joints[joints.Length - 2].gameObject.transform.rotation = Quaternion.AngleAxis((angularVelocity1*Mathf.Rad2Deg) * Time.deltaTime, axis[0].ToVector3()) * joints[joints.Length - 2].gameObject.transform.rotation;
                 joints[joints.Length - 2].gameObject.transform.rotation = (Quat.AxisAngleToMyQuat(axis[0], (angularVelocity1 * Mathf.Rad2Deg) * Time.deltaTime) * Quat.toQuat(joints[joints.Length - 2].gameObject.transform.rotation)).ToQuaternion();
-                angularVelocity1 -= angularVelocity1 * Time.deltaTime *4;
+                angularVelocity1 -= angularVelocity1 * Time.deltaTime *16 * mechanichRes;
 
                 //SEGUNDO SEGMENTO DEL BRAZO
                 //joints[joints.Length - 3].gameObject.transform.rotation = Quaternion.AngleAxis((angularVelocity2 * Mathf.Rad2Deg) * Time.deltaTime, axis[1].ToVector3()) * joints[joints.Length - 3].gameObject.transform.rotation;
                 joints[joints.Length - 3].gameObject.transform.rotation = (Quat.AxisAngleToMyQuat(axis[1], (angularVelocity2 * Mathf.Rad2Deg) * Time.deltaTime) * Quat.toQuat(joints[joints.Length - 3].gameObject.transform.rotation)).ToQuaternion();
 
 
-                angularVelocity2 -= (angularVelocity2 * Time.deltaTime)*4;
+                angularVelocity2 -= (angularVelocity2 * Time.deltaTime)*16*mechanichRes;
             }
+
+
+
+
         }
+
 	}
+
+    public void SetContactTime(float a) {
+        contactTime = a;
+    }
+
+    public void SetElasticityC(float a) {
+        elasticityC = a;
+    }
+
+    public void SetMechRes(float a) {
+        mechanichRes = a;
+    }
 }

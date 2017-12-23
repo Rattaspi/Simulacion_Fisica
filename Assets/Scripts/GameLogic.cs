@@ -100,6 +100,7 @@ public class GameLogic : MonoBehaviour {
         }
     }
 
+
     void Reset(){
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }

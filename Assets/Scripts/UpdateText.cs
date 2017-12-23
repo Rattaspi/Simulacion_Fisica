@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 public class UpdateText : MonoBehaviour {
     public GameObject sliderObject;
+    public string variable;
 	// Use this for initialization
 	void Start () {
 		
@@ -13,6 +14,6 @@ public class UpdateText : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        GetComponent<Text>().text = "Velocidad X: " + sliderObject.GetComponent<Slider>().value;
+        GetComponent<Text>().text = variable + " " + ((Mathf.Floor(sliderObject.GetComponent<Slider>().value*100))/100);
 	}
 }
