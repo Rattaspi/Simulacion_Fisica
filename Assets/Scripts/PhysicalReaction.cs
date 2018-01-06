@@ -16,6 +16,7 @@ public class PhysicalReaction : MonoBehaviour {
     public float angularVelocity1, angularVelocity2;
 
     public SimpleLineRendering torque1Render;
+    public SimpleLineRendering torque2Render;
 
 
 
@@ -49,7 +50,6 @@ public class PhysicalReaction : MonoBehaviour {
             //Debug.Log(forces[0]);
             Debug.DrawLine(Emisor.gameObject.transform.position, ((new Vector3D(Emisor.gameObject.transform.position) + forces[0] / forces[0].Magnitude() * 25).ToVector3()), Color.red);
 
-            torque1Render.Go();
 
             if (HitForceRender == null) {
                 HitForceRender = gameObject.AddComponent<LineRenderer>();
@@ -65,8 +65,18 @@ public class PhysicalReaction : MonoBehaviour {
             HitForceRender.endColor = new Color(255, 0, 0);
 
             torque1Render.position1 = Vector3D.ToVector3D(torque1Render.gameObject.transform.position);
-            torque1Render.position2 = axis[0].Normalized() * 25;
- 
+            torque1Render.position2 = torque1Render.position1- axis[0]*10;
+
+
+            torque2Render.position1 = Vector3D.ToVector3D(torque2Render.gameObject.transform.position);
+            torque2Render.position2 = torque2Render.position1 - axis[1] * 10;
+
+            torque1Render.Go();
+            torque2Render.Go();
+
+
+            //torque1Render.position1 = new Vector3D(1,0,0);
+
             drawForcesTimer += Time.deltaTime;
             if (drawForcesTimer > timeToDrawForces) {
                 drawForces = false;
