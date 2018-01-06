@@ -12,6 +12,7 @@ public class CanvasScript : MonoBehaviour {
     public GameObject hide;
     public GamePhysics effectGenerator;
     public PhysicalReaction reactor;
+    public GameObject hint;
 
     // Use this for initialization
     void Start () {
@@ -25,6 +26,10 @@ public class CanvasScript : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+        if (!PermanentData.instance.showHints) {
+            hint.SetActive(true);
+            PermanentData.instance.showHints = true;
+        }
         if (Input.GetKeyDown(KeyCode.H)) {
             hide.SetActive(!hide.activeInHierarchy);
         }
