@@ -48,7 +48,7 @@ public class PhysicalReaction : MonoBehaviour {
         if (drawForces && forces[0] != null) {
             //Debug.Log(Emisor.gameObject.transform.position);
             //Debug.Log(forces[0]);
-            Debug.DrawLine(Emisor.gameObject.transform.position, ((new Vector3D(Emisor.gameObject.transform.position) + forces[0] / forces[0].Magnitude() * 25).ToVector3()), Color.red);
+            //Debug.DrawLine(Emisor.gameObject.transform.position, ((new Vector3D(Emisor.gameObject.transform.position) + forces[0] / forces[0].Magnitude() * 25).ToVector3()), Color.red);
 
 
             if (HitForceRender == null) {
@@ -93,7 +93,7 @@ public class PhysicalReaction : MonoBehaviour {
         if (active) {
             if (!initialHit) {
                 initialHit = true;
-                Vector3D F1 = sphereMass * ((-velocidadRecibida) / contactTime);
+                Vector3D F1 = sphereMass * ((-velocidadRecibida) / contactTime)*armMass/(armMass+sphereMass);
                 Debug.Log(F1);
 
                 forces[0] = F1;

@@ -8,10 +8,11 @@ public class SimpleLineRendering : MonoBehaviour {
     public Vector3D position1;
     public Vector3D position2;
     float timer;
-    bool gone;
+    public bool gone;
+    Color color;
     // Use this for initialization
     void Start () {
-		
+        color = new Color(0, 255, 0);
 	}
 	
     public void Go() {
@@ -21,8 +22,23 @@ public class SimpleLineRendering : MonoBehaviour {
         }
     }
 
-	// Update is called once per frame
-	void Update () {
+    public void SetUp(Vector3D pos1, Vector3D pos2, Color color) {
+        position1 = pos1;
+        position2 = pos2;
+        this.color = color;
+    }
+
+    public void SetUp(Color color) {
+        this.color = color;
+    }
+
+    public void SetUp(Vector3D pos1, Vector3D pos2) {
+        position1 = pos1;
+        position2 = pos2;
+    }
+
+    // Update is called once per frame
+    void Update () {
         if (drawForces) {
             //Debug.Log(Emisor.gameObject.transform.position);
             //Debug.Log(forces[0]);
@@ -40,8 +56,8 @@ public class SimpleLineRendering : MonoBehaviour {
 
             render.SetPositions(new Vector3[2] { posiciones[0].ToVector3(), posiciones[1].ToVector3() });
             render.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
-            render.startColor = new Color(0, 0, 255);
-            render.endColor = new Color(0, 0, 255);
+            render.startColor = color;
+            render.endColor = color;
 
             timer += Time.deltaTime;
             if (timer > 1.0f)

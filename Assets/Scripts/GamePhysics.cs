@@ -11,6 +11,7 @@ public class GamePhysics : MonoBehaviour{
     bool unPaused = false;
     public bool done = false;
     public float sphereMass;
+    public SimpleLineRendering sphereSpeedRender;
 
     private void Awake(){
         sphereMass = 1;
@@ -30,8 +31,13 @@ public class GamePhysics : MonoBehaviour{
     }
 
     void Update(){
+        sphereSpeedRender.gone = false;
+        sphereSpeedRender.SetUp(Vector3D.ToVector3D(gameObject.transform.position), (new Vector3D(gameObject.transform.position) + velocity / velocity.Magnitude() * 25),Color.green);
 
-        Debug.DrawLine(gameObject.transform.position, (new Vector3D(gameObject.transform.position) + velocity / velocity.Magnitude() * 25).ToVector3(),Color.blue);
+        sphereSpeedRender.Go();
+
+
+        //Debug.DrawLine(gameObject.transform.position, (new Vector3D(gameObject.transform.position) + velocity / velocity.Magnitude() * 25).ToVector3(),Color.blue);
 
         if (!FindObjectOfType<GameLogic>().paused){
             if (!unPaused) { 
@@ -53,8 +59,8 @@ public class GamePhysics : MonoBehaviour{
             //velocity.Print();
         //Antes de empezar el movimiento puedes mover la esfera para situar la posicion inicial del disparo
         } else {
-            Vector3D vSide = new Vector3D(0, 0, 10 * Time.deltaTime);
-            Vector3D vUp = new Vector3D(0, 10 * Time.deltaTime, 0);
+            Vector3D vSide = new Vector3D(0, 0, 10 * 0.05f);
+            Vector3D vUp = new Vector3D(0, 10 * 0.05f, 0);
             if (Input.GetKey(KeyCode.RightArrow)) {
                 transform.position = transform.position - vSide.ToVector3();
             }else if (Input.GetKey(KeyCode.LeftArrow)) {
