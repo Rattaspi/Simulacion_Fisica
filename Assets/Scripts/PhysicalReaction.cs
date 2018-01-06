@@ -15,6 +15,10 @@ public class PhysicalReaction : MonoBehaviour {
     public Vector3D linearVelocity1, linearVelocity2;
     public float angularVelocity1, angularVelocity2;
 
+    public SimpleLineRendering torque1Render;
+
+
+
     float[] angles;
     Vector3D[] distances, axis;
     private RobotJoint[] joints;
@@ -22,8 +26,10 @@ public class PhysicalReaction : MonoBehaviour {
     public bool drawForces;
     float timeToDrawForces = 0.5f;
     float drawForcesTimer;
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+    LineRenderer HitForceRender;
+
+    void Start () {
         angles = new float[3];
         distances = new Vector3D[3];
         axis = new Vector3D[3];
@@ -38,17 +44,38 @@ public class PhysicalReaction : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        if (drawForces&&forces[0]!=null) {
+        if (drawForces && forces[0] != null) {
             //Debug.Log(Emisor.gameObject.transform.position);
             //Debug.Log(forces[0]);
             Debug.DrawLine(Emisor.gameObject.transform.position, ((new Vector3D(Emisor.gameObject.transform.position) + forces[0] / forces[0].Magnitude() * 25).ToVector3()), Color.red);
 
+            torque1Render.Go();
 
+            if (HitForceRender == null) {
+                HitForceRender = gameObject.AddComponent<LineRenderer>();
+            }
+            HitForceRender.material = new Material(Shader.Find("Particles/Additive"));
+            HitForceRender.widthMultiplier = 0.2f;
+            HitForceRender.positionCount = 2;
+            Vector3D[] posiciones = new Vector3D[2] {Vector3D.ToVector3D(Emisor.gameObject.transform.position), new Vector3D(Emisor.gameObject.transform.position) + forces[0] / forces[0].Magnitude() * 25 };
 
+            HitForceRender.SetPositions(new Vector3[2] {posiciones[0].ToVector3(),posiciones[1].ToVector3()});
+            HitForceRender.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+            HitForceRender.startColor = new Color(255, 0, 0);
+            HitForceRender.endColor = new Color(255, 0, 0);
+
+            torque1Render.position1 = Vector3D.ToVector3D(torque1Render.gameObject.transform.position);
+            torque1Render.position2 = axis[0].Normalized() * 25;
+ 
             drawForcesTimer += Time.deltaTime;
             if (drawForcesTimer > timeToDrawForces) {
                 drawForces = false;
             }
+        } else {
+            if (HitForceRender != null) {
+                Destroy(HitForceRender);
+            }
+
         }
 
 
