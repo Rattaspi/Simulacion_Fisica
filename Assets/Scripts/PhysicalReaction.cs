@@ -93,7 +93,7 @@ public class PhysicalReaction : MonoBehaviour {
         if (active) {
             if (!initialHit) {
                 initialHit = true;
-                Vector3D F1 = sphereMass * ((-velocidadRecibida) / contactTime)*armMass/(armMass+sphereMass);
+                Vector3D F1 = sphereMass * ((-velocidadRecibida*(1-elasticityC)) / contactTime)*(1-armMass/(armMass+sphereMass));
                 Debug.Log(F1);
 
                 forces[0] = F1;
@@ -123,14 +123,14 @@ public class PhysicalReaction : MonoBehaviour {
             if(angularVelocity1 > 0.001) {
                 // joints[joints.Length - 2].gameObject.transform.rotation = Quaternion.AngleAxis((angularVelocity1*Mathf.Rad2Deg) * Time.deltaTime, axis[0].ToVector3()) * joints[joints.Length - 2].gameObject.transform.rotation;
                 joints[joints.Length - 2].gameObject.transform.rotation = (Quat.AxisAngleToMyQuat(axis[0], (angularVelocity1 * Mathf.Rad2Deg) * Time.deltaTime) * Quat.toQuat(joints[joints.Length - 2].gameObject.transform.rotation)).ToQuaternion();
-                angularVelocity1 -= angularVelocity1 * Time.deltaTime *16 * mechanichRes;
+                angularVelocity1 -= angularVelocity1 * Time.deltaTime * 4 * mechanichRes;
 
                 //SEGUNDO SEGMENTO DEL BRAZO
                 //joints[joints.Length - 3].gameObject.transform.rotation = Quaternion.AngleAxis((angularVelocity2 * Mathf.Rad2Deg) * Time.deltaTime, axis[1].ToVector3()) * joints[joints.Length - 3].gameObject.transform.rotation;
                 joints[joints.Length - 3].gameObject.transform.rotation = (Quat.AxisAngleToMyQuat(axis[1], (angularVelocity2 * Mathf.Rad2Deg) * Time.deltaTime) * Quat.toQuat(joints[joints.Length - 3].gameObject.transform.rotation)).ToQuaternion();
 
 
-                angularVelocity2 -= (angularVelocity2 * Time.deltaTime)*16*mechanichRes;
+                angularVelocity2 -= (angularVelocity2 * Time.deltaTime)*4*mechanichRes;
             }
 
 
