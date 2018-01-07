@@ -14,7 +14,7 @@ public class PhysicalReaction : MonoBehaviour {
     public float sphereMass = 1f;
     public Vector3D linearVelocity1, linearVelocity2;
     public float angularVelocity1, angularVelocity2;
-
+    public Vector3D localVelocityInspector;
     public SimpleLineRendering torque1Render;
     public SimpleLineRendering torque2Render;
 
@@ -42,9 +42,22 @@ public class PhysicalReaction : MonoBehaviour {
         drawForcesTimer = 0;
 
     }
-	
+
+
+    public void SetArmMass(float m) {
+        armMass = m;
+    }
+
+    public void SetSphereMass(float m) {
+        sphereMass = m;
+        Emisor.GetComponent<GamePhysics>().sphereMass = m;
+    }
+
 	// Update is called once per frame
 	void Update () {
+        if(Emisor!=null)
+        localVelocityInspector = Vector3D.ToVector3D(Emisor.GetComponent<GamePhysics>().velocityInspector);
+
         if (drawForces && forces[0] != null) {
             //Debug.Log(Emisor.gameObject.transform.position);
             //Debug.Log(forces[0]);
@@ -150,5 +163,9 @@ public class PhysicalReaction : MonoBehaviour {
 
     public void SetMechRes(float a) {
         mechanichRes = a;
+    }
+
+    public void OnDestroy() {
+        PermanentData.instance.SaveValues(localVelocityInspector.x,elasticityC, contactTime,mechanichRes,armMass,sphereMass);
     }
 }

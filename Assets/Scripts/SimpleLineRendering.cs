@@ -45,7 +45,6 @@ public class SimpleLineRendering : MonoBehaviour {
             //Debug.DrawLine(Emisor.gameObject.transform.position, ((new Vector3D(Emisor.gameObject.transform.position) + forces[0] / forces[0].Magnitude() * 25).ToVector3()), Color.red);
 
             if (render == null) {
-                Debug.Log("Adding");
                 render = gameObject.AddComponent<LineRenderer>();
             }
 

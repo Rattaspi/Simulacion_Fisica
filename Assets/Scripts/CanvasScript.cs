@@ -9,6 +9,9 @@ public class CanvasScript : MonoBehaviour {
     public Slider elasticityC; 
     public Slider contactTime;
     public Slider mecanicResistance;
+    public Slider sphereMass;
+    public Slider armMass;
+
     public GameObject hide;
     public GamePhysics effectGenerator;
     public PhysicalReaction reactor;
@@ -16,13 +19,25 @@ public class CanvasScript : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-        velocityX.value = effectGenerator.velocity.x;
-        elasticityC.value = reactor.elasticityC;
-        contactTime.value = reactor.contactTime;
-        mecanicResistance.value = reactor.mechanichRes;
-        //Debug.Log(reactor.mechanichRes);
+        if (!PermanentData.instance.hasValues) {
+            velocityX.value = effectGenerator.velocity.x;
+            elasticityC.value = reactor.elasticityC;
+            contactTime.value = reactor.contactTime;
+            mecanicResistance.value = reactor.mechanichRes;
+            armMass.value = reactor.armMass;
+            sphereMass.value = effectGenerator.sphereMass;
+            //Debug.Log(reactor.mechanichRes);
+        } else {
+            velocityX.value = PermanentData.instance.velocityX;
+            elasticityC.value = PermanentData.instance.elasticityC;
+            contactTime.value = PermanentData.instance.contactTime;
+            mecanicResistance.value = PermanentData.instance.mechanichRes;
+            armMass.value = PermanentData.instance.armMass;
+            sphereMass.value = PermanentData.instance.sphereMass;
+            hide.SetActive(PermanentData.instance.previousHide);
 
-	}
+        }
+    }
 	
 	// Update is called once per frame
 	void Update () {
@@ -33,5 +48,7 @@ public class CanvasScript : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.H)) {
             hide.SetActive(!hide.activeInHierarchy);
         }
-	}
+        PermanentData.instance.previousHide = hide.activeInHierarchy;
+
+    }
 }

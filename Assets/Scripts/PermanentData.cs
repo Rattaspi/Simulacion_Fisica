@@ -5,7 +5,14 @@ using UnityEngine;
 public class PermanentData : MonoBehaviour {
     public static PermanentData instance =null;
     public bool showHints;
-
+    public bool hasValues;
+    public float velocityX;
+    public float elasticityC;
+    public float contactTime;
+    public float mechanichRes;
+    public float armMass;
+    public float sphereMass;
+    public bool previousHide;
     private void Awake() {
         //Check if instance already exists
         if (instance == null)
@@ -20,6 +27,16 @@ public class PermanentData : MonoBehaviour {
             Destroy(gameObject);
         DontDestroyOnLoad(this);
 
+    }
+
+    public void SaveValues(float v, float e, float c, float m, float am, float sm) {
+        hasValues = true;
+        velocityX = v;
+        elasticityC = e;
+        contactTime = c;
+        mechanichRes = m;
+        armMass = am;
+        sphereMass = sm;
     }
 
     // Use this for initialization
