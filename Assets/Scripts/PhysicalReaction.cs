@@ -6,14 +6,14 @@ public class PhysicalReaction : MonoBehaviour {
     public float elasticityC;
     public float contactTime;
     public float mechanichRes;
-    public GameObject Emisor;
+    public GameObject Emisor; //the sphere
     public Vector3D velocidadRecibida;
     public bool active;
     public bool initialHit;
     public float armMass = 10;
     public float sphereMass = 1f;
-    public Vector3D linearVelocity1, linearVelocity2;
-    public float angularVelocity1, angularVelocity2;
+    public Vector3D linearVelocity1, linearVelocity2, linearVelocity3;
+    public float angularVelocity1, angularVelocity2, angularVelocity3;
     public Vector3D localVelocityInspector;
     public SimpleLineRendering torque1Render;
     public SimpleLineRendering torque2Render;
@@ -22,7 +22,7 @@ public class PhysicalReaction : MonoBehaviour {
 
     float[] angles;
     Vector3D[] distances, axis;
-    private RobotJoint[] joints;
+    private RobotJoint[] joints; //length 4
     Vector3D[] forces;
     public bool drawForces;
     float timeToDrawForces = 0.5f;
@@ -106,8 +106,7 @@ public class PhysicalReaction : MonoBehaviour {
         if (active) {
             if (!initialHit) {
                 initialHit = true;
-                Vector3D F1 = sphereMass * ((-velocidadRecibida*(1-elasticityC)) / contactTime)*(1-armMass/(armMass+sphereMass));
-                Debug.Log(F1);
+                Vector3D F1 = sphereMass * ((-velocidadRecibida * (1 - elasticityC)) / contactTime) * (1 - armMass / (armMass + sphereMass));
 
                 forces[0] = F1;
                 forces[0].x *= -1;
@@ -130,23 +129,39 @@ public class PhysicalReaction : MonoBehaviour {
                 Vector3D F2Y = F2 * Mathf.Sin(Mathf.Deg2Rad * angles[1]);
                 Vector3D acceleration2 = F2Y / armMass;//no se si aqui hay que dividirlo por la masa realmente
                 linearVelocity2 = acceleration2 * contactTime;
-                angularVelocity2 = linearVelocity1.Magnitude() / distances[0].Magnitude();
+                angularVelocity2 = linearVelocity2.Magnitude() / distances[1].Magnitude();
+
+                //TERCER SEGMENTO DEL BRAZO
+                Vector3D F3 = new Vector3D(0, F1.y, 0);
+                distances[2] = Vector3D.ToVector3D(joints[0].transform.position) - Vector3D.ToVector3D(Emisor.transform.position);
+                distances[2].x = 0;
+                angles[2] = Vector3D.Angle(F3, distances[2]);
+                axis[2] = Vector3D.Cross(distances[2], F3);
+                F3.y = F3.y * Mathf.Sin(angles[2]);
+                Vector3D acceleration3 = F3 / armMass;
+                linearVelocity3 = acceleration3 * contactTime;
+                angularVelocity3 = linearVelocity3.Magnitude() / distances[2].Magnitude(); 
 
             }
+
             if(angularVelocity1 > 0.001) {
                 // joints[joints.Length - 2].gameObject.transform.rotation = Quaternion.AngleAxis((angularVelocity1*Mathf.Rad2Deg) * Time.deltaTime, axis[0].ToVector3()) * joints[joints.Length - 2].gameObject.transform.rotation;
                 joints[joints.Length - 2].gameObject.transform.rotation = (Quat.AxisAngleToMyQuat(axis[0], (angularVelocity1 * Mathf.Rad2Deg) * Time.deltaTime) * Quat.toQuat(joints[joints.Length - 2].gameObject.transform.rotation)).ToQuaternion();
-                angularVelocity1 -= angularVelocity1 * Time.deltaTime * 4 * mechanichRes;
+                angularVelocity1 -= angularVelocity1 * Time.deltaTime * 4 * mechanichRes; 
+            }
 
+            if(angularVelocity2 > 0.001f) {
                 //SEGUNDO SEGMENTO DEL BRAZO
                 //joints[joints.Length - 3].gameObject.transform.rotation = Quaternion.AngleAxis((angularVelocity2 * Mathf.Rad2Deg) * Time.deltaTime, axis[1].ToVector3()) * joints[joints.Length - 3].gameObject.transform.rotation;
                 joints[joints.Length - 3].gameObject.transform.rotation = (Quat.AxisAngleToMyQuat(axis[1], (angularVelocity2 * Mathf.Rad2Deg) * Time.deltaTime) * Quat.toQuat(joints[joints.Length - 3].gameObject.transform.rotation)).ToQuaternion();
-
-
-                angularVelocity2 -= (angularVelocity2 * Time.deltaTime)*4*mechanichRes;
+                angularVelocity2 -= (angularVelocity2 * Time.deltaTime) * 4 * mechanichRes;
             }
 
-
+            if(angularVelocity3 > 0.001f) {
+                //TERCER SEGMENTO DEL BRAZO
+                joints[0].transform.rotation = (Quat.AxisAngleToMyQuat(axis[2], (angularVelocity3 * Mathf.Rad2Deg) * Time.deltaTime) * Quat.toQuat(joints[0].transform.rotation)).ToQuaternion();
+                angularVelocity3 -= (angularVelocity3 * Time.deltaTime) * 4 * mechanichRes;
+            }
 
 
         }
