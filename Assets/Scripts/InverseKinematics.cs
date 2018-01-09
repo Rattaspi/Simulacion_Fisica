@@ -110,7 +110,8 @@ public class InverseKinematics : MonoBehaviour {
                 float y = Destination.position.y + gamePhysics.velocity.y * t + ((gamePhysics.gLuna * t * t) / 2);
                 //Debug.Log(y);
                 target = new Vector3D(30, y, Destination.position.z);
-                caja.transform.position = Joints[Joints.Length - 1].gameObject.transform.position;
+                    caja.transform.position = Joints[Joints.Length - 1].gameObject.transform.position;
+                
             }
             if (move) {
                 // Do we have to approach the target?
@@ -130,7 +131,12 @@ public class InverseKinematics : MonoBehaviour {
                     contador++;
                 }
             }
-            caja.transform.position = Joints[Joints.Length - 1].gameObject.transform.position;
+            if (!GetComponent<PhysicalReaction>().initialHit) {
+                caja.transform.position = Joints[Joints.Length - 1].gameObject.transform.position;
+            } else {
+                //Debug.Log("Change");
+                caja.transform.parent = Joints[Joints.Length - 1].gameObject.transform;
+            }
         }
     }
 

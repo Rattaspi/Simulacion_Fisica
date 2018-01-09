@@ -14,7 +14,7 @@ public class GamePhysics : MonoBehaviour{
     public SimpleLineRendering sphereSpeedRender;
 
     private void Awake(){
-        sphereMass = 1;
+        //sphereMass = 1;
         gLuna = -1.622f;
         position = new Vector3D(transform.position.x, transform.position.y, transform.position.z);
         velocity.Set(velocityInspector.x, velocityInspector.y, velocityInspector.z);
@@ -31,10 +31,14 @@ public class GamePhysics : MonoBehaviour{
     }
 
     void Update(){
-        sphereSpeedRender.gone = false;
-        sphereSpeedRender.SetUp(Vector3D.ToVector3D(gameObject.transform.position), (new Vector3D(gameObject.transform.position) + velocity / velocity.Magnitude() * 25),Color.green);
-
-        sphereSpeedRender.Go();
+        if (PhysicalReaction.drawForces) {
+            sphereSpeedRender.gone = false;
+            //sphereSpeedRender.SetUp(Vector3D.ToVector3D(gameObject.transform.position), (new Vector3D(gameObject.transform.position) + velocity / velocity.Magnitude() * 25), Color.green);
+            sphereSpeedRender.position1 = Vector3D.ToVector3D(gameObject.transform.position);
+            sphereSpeedRender.position2 = (new Vector3D(gameObject.transform.position) + velocity / velocity.Magnitude() * 25);
+            sphereSpeedRender.elColor = SimpleLineRendering.colore.verde;
+            sphereSpeedRender.Go();
+        }
 
 
         //Debug.DrawLine(gameObject.transform.position, (new Vector3D(gameObject.transform.position) + velocity / velocity.Magnitude() * 25).ToVector3(),Color.blue);

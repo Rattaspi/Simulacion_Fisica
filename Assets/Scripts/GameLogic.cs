@@ -2,6 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+
 using UnityEngine.SceneManagement;
 
 public class GameLogic : MonoBehaviour {
@@ -23,6 +25,11 @@ public class GameLogic : MonoBehaviour {
             Time.timeScale = 0;
         else
             Time.timeScale = 0.5f;
+
+        if(Input.GetKeyDown(KeyCode.D)) {
+            PhysicalReaction.drawForces = !PhysicalReaction.drawForces;
+            GameObject.FindObjectOfType<Toggle>().isOn = PhysicalReaction.drawForces;
+        }
 
         if (Input.GetKeyDown(KeyCode.R)){
             Reset();

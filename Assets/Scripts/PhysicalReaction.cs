@@ -17,20 +17,29 @@ public class PhysicalReaction : MonoBehaviour {
     public Vector3D localVelocityInspector;
     public SimpleLineRendering torque1Render;
     public SimpleLineRendering torque2Render;
+    public SimpleLineRendering torque3Render;
+    Vector3D []cross1;
+    Vector3D []cross2;
+    public SimpleLineRendering decomposedForces1;
+    public SimpleLineRendering decomposedForces2;
 
+    public Transform endeffector;
 
 
     float[] angles;
     Vector3D[] distances, axis;
     private RobotJoint[] joints; //length 4
     Vector3D[] forces;
-    public bool drawForces;
+    public static bool drawForces;
     float timeToDrawForces = 0.5f;
     float drawForcesTimer;
     // Use this for initialization
     LineRenderer HitForceRender;
 
     void Start () {
+        drawForces = true;
+        cross1 = new Vector3D[3];
+        cross2 = new Vector3D[3];
         angles = new float[3];
         distances = new Vector3D[3];
         axis = new Vector3D[3];
@@ -43,6 +52,9 @@ public class PhysicalReaction : MonoBehaviour {
 
     }
 
+    public void SetDraw(bool b) {
+        drawForces = b;
+    }
 
     public void SetArmMass(float m) {
         armMass = m;
@@ -67,10 +79,11 @@ public class PhysicalReaction : MonoBehaviour {
             if (HitForceRender == null) {
                 HitForceRender = gameObject.AddComponent<LineRenderer>();
             }
-            HitForceRender.material = new Material(Shader.Find("Particles/Additive"));
+            //HitForceRender.material = new Material(Shader.Find("Particles/Additive"));
+            HitForceRender.material = Resources.Load<Material>("redMaterial");
             HitForceRender.widthMultiplier = 0.2f;
             HitForceRender.positionCount = 2;
-            Vector3D[] posiciones = new Vector3D[2] {Vector3D.ToVector3D(Emisor.gameObject.transform.position), new Vector3D(Emisor.gameObject.transform.position) + forces[0] / forces[0].Magnitude() * 25 };
+            Vector3D[] posiciones = new Vector3D[2] {Vector3D.ToVector3D(endeffector.position), new Vector3D(endeffector.position) + forces[0] / forces[0].Magnitude() * 25 };
 
             HitForceRender.SetPositions(new Vector3[2] {posiciones[0].ToVector3(),posiciones[1].ToVector3()});
             HitForceRender.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
@@ -78,15 +91,22 @@ public class PhysicalReaction : MonoBehaviour {
             HitForceRender.endColor = new Color(255, 0, 0);
 
             torque1Render.position1 = Vector3D.ToVector3D(torque1Render.gameObject.transform.position);
-            torque1Render.position2 = torque1Render.position1- axis[0]*10;
-
+            torque1Render.position2 = (torque1Render.position1 - axis[0])*0.5f;
+            torque1Render.elColor = SimpleLineRendering.colore.verde;
 
             torque2Render.position1 = Vector3D.ToVector3D(torque2Render.gameObject.transform.position);
-            torque2Render.position2 = torque2Render.position1 - axis[1] * 10;
+            torque2Render.position2 = torque2Render.position1 - axis[1] * 5;
+            torque2Render.elColor = SimpleLineRendering.colore.verde;
+
+            torque3Render.position1 = Vector3D.ToVector3D(torque3Render.gameObject.transform.position);
+            torque3Render.position2 = torque3Render.position1 - axis[2] * 1000;
+            torque3Render.elColor = SimpleLineRendering.colore.verde;
+
+
 
             torque1Render.Go();
             torque2Render.Go();
-
+            torque3Render.Go();
 
             //torque1Render.position1 = new Vector3D(1,0,0);
 
@@ -112,7 +132,7 @@ public class PhysicalReaction : MonoBehaviour {
                 forces[0].x *= -1;
                 angles[0] = Vector3D.Angle(F1, (Vector3D.ToVector3D(joints[joints.Length - 1].gameObject.transform.position)- Vector3D.ToVector3D(joints[joints.Length - 2].gameObject.transform.position)));
                 distances[0] = Vector3D.ToVector3D(joints[joints.Length - 1].gameObject.transform.position) - Vector3D.ToVector3D(joints[joints.Length - 2].gameObject.transform.position);
-                axis[0] = Vector3D.Cross(F1, distances[0]).Normalized();
+                axis[0] = Vector3D.Cross(distances[0].Normalized(),F1);
 
                 Vector3D F1X = F1 * Mathf.Cos(Mathf.Deg2Rad * angles[0]);
                 Vector3D F1Y = F1 * Mathf.Sin(Mathf.Deg2Rad * angles[0]);
@@ -122,6 +142,7 @@ public class PhysicalReaction : MonoBehaviour {
 
                 //SEGUNDO SEGMENTO DEL BRAZO
                 Vector3D F2 = F1X;
+                forces[1] = F1X;
                 distances[1] = Vector3D.ToVector3D(joints[joints.Length - 2].gameObject.transform.position) - Vector3D.ToVector3D(joints[joints.Length - 3].gameObject.transform.position);
                 angles[1] = (Vector3D.Angle(F2, distances[1]));
                 axis[1] = Vector3D.Cross(distances[1], F2).Normalized();
@@ -133,6 +154,7 @@ public class PhysicalReaction : MonoBehaviour {
 
                 //TERCER SEGMENTO DEL BRAZO
                 Vector3D F3 = new Vector3D(0, F1.y, 0);
+                forces[2] = F3;
                 distances[2] = Vector3D.ToVector3D(joints[0].transform.position) - Vector3D.ToVector3D(Emisor.transform.position);
                 distances[2].x = 0;
                 angles[2] = Vector3D.Angle(F3, distances[2]);
@@ -144,23 +166,55 @@ public class PhysicalReaction : MonoBehaviour {
 
             }
 
-            if(angularVelocity1 > 0.001) {
-                // joints[joints.Length - 2].gameObject.transform.rotation = Quaternion.AngleAxis((angularVelocity1*Mathf.Rad2Deg) * Time.deltaTime, axis[0].ToVector3()) * joints[joints.Length - 2].gameObject.transform.rotation;
-                joints[joints.Length - 2].gameObject.transform.rotation = (Quat.AxisAngleToMyQuat(axis[0], (angularVelocity1 * Mathf.Rad2Deg) * Time.deltaTime) * Quat.toQuat(joints[joints.Length - 2].gameObject.transform.rotation)).ToQuaternion();
-                angularVelocity1 -= angularVelocity1 * Time.deltaTime * 4 * mechanichRes; 
+            if (angularVelocity1 > 0.001) {
+                Vector3D vector1,vector2;
+                vector1 = Vector3D.ToVector3D(endeffector.transform.position)-Vector3D.ToVector3D(joints[2].transform.position) ;
+                vector2 = Vector3D.ToVector3D(joints[1].transform.position) - Vector3D.ToVector3D(joints[2].transform.position);
+                //Debug.Log(Vector3D.Angle(vector1, vector2));
+                if (Vector3D.Angle(vector1, vector2) > 90.0f){
+                    // joints[joints.Length - 2].gameObject.transform.rotation = Quaternion.AngleAxis((angularVelocity1*Mathf.Rad2Deg) * Time.deltaTime, axis[0].ToVector3()) * joints[joints.Length - 2].gameObject.transform.rotation;
+                    joints[joints.Length - 2].gameObject.transform.rotation = (Quat.AxisAngleToMyQuat(axis[0], (angularVelocity1 * Mathf.Rad2Deg) * Time.deltaTime) * Quat.toQuat(joints[joints.Length - 2].gameObject.transform.rotation)).ToQuaternion();
+                    angularVelocity1 -= angularVelocity1 * Time.deltaTime * 4 * mechanichRes;
+                }
             }
 
             if(angularVelocity2 > 0.001f) {
+                Vector3D vector1, vector2;
+                vector1 = Vector3D.ToVector3D(joints[2].transform.position) - Vector3D.ToVector3D(joints[1].transform.position);
+                vector2 = Vector3D.ToVector3D(joints[0].transform.position) - Vector3D.ToVector3D(joints[1].transform.position);
                 //SEGUNDO SEGMENTO DEL BRAZO
                 //joints[joints.Length - 3].gameObject.transform.rotation = Quaternion.AngleAxis((angularVelocity2 * Mathf.Rad2Deg) * Time.deltaTime, axis[1].ToVector3()) * joints[joints.Length - 3].gameObject.transform.rotation;
-                joints[joints.Length - 3].gameObject.transform.rotation = (Quat.AxisAngleToMyQuat(axis[1], (angularVelocity2 * Mathf.Rad2Deg) * Time.deltaTime) * Quat.toQuat(joints[joints.Length - 3].gameObject.transform.rotation)).ToQuaternion();
-                angularVelocity2 -= (angularVelocity2 * Time.deltaTime) * 4 * mechanichRes;
+                if (Vector3D.Angle(vector1, vector2) > 90.0f) {
+                    joints[joints.Length - 3].gameObject.transform.rotation = (Quat.AxisAngleToMyQuat(axis[1], (angularVelocity2 * Mathf.Rad2Deg) * Time.deltaTime) * Quat.toQuat(joints[joints.Length - 3].gameObject.transform.rotation)).ToQuaternion();
+                    angularVelocity2 -= (angularVelocity2 * Time.deltaTime) * 4 * mechanichRes;
+                }
             }
 
             if(angularVelocity3 > 0.001f) {
                 //TERCER SEGMENTO DEL BRAZO
                 joints[0].transform.rotation = (Quat.AxisAngleToMyQuat(axis[2], (angularVelocity3 * Mathf.Rad2Deg) * Time.deltaTime) * Quat.toQuat(joints[0].transform.rotation)).ToQuaternion();
                 angularVelocity3 -= (angularVelocity3 * Time.deltaTime) * 4 * mechanichRes;
+            }
+
+            if (drawForces && forces[0] != null) {
+
+                cross1[0] = Vector3D.Cross(Vector3D.ToVector3D(joints[3].transform.position) - Vector3D.ToVector3D(joints[2].transform.position), forces[0]);
+                cross2[0] = Vector3D.Cross(cross1[0], Vector3D.ToVector3D(joints[3].transform.position) - Vector3D.ToVector3D(joints[2].transform.position));
+                decomposedForces1.position1 = Vector3D.ToVector3D(endeffector.gameObject.transform.position);
+                decomposedForces1.position2 = cross2[0];
+                //decomposedForces1.SetUp(new Color(255, 0, 0));
+                decomposedForces1.elColor = SimpleLineRendering.colore.rojo;
+                decomposedForces1.Go();
+
+                cross1[1] = Vector3D.Cross(Vector3D.ToVector3D(joints[2].transform.position) - Vector3D.ToVector3D(joints[1].transform.position), forces[1]);
+                cross2[1] = Vector3D.Cross(cross1[1], Vector3D.ToVector3D(joints[2].transform.position) - Vector3D.ToVector3D(joints[1].transform.position));
+
+                decomposedForces2.position1 = Vector3D.ToVector3D(joints[2].gameObject.transform.position);
+                decomposedForces2.position2 = cross2[1];
+                decomposedForces2.elColor = SimpleLineRendering.colore.rojo;
+                //decomposedForces2.SetUp(new Color(255, 0, 0));
+                decomposedForces2.Go();
+
             }
 
 
